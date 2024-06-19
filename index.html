@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>기도 노트</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <button id="add-prayer-btn">기도 제목 추가</button>
+            <button id="view-prayers-btn">기도 제목 보기</button>
+        </nav>
+        <div id="add-prayer-page" class="page">
+            <h1>기도 제목 추가</h1>
+            <form id="prayer-form">
+                <textarea id="prayer-input" placeholder="기도 제목을 입력하세요" required rows="5"></textarea>
+                <select id="category-select">
+                    <option value="VIP">VIP</option>
+                    <option value="가족">가족</option>
+                    <option value="목장">목장</option>
+                    <option value="교회">교회</option>
+                    <option value="나라">나라</option>
+                </select>
+                <button type="submit">추가</button>
+            </form>
+        </div>
+        <div id="view-prayers-page" class="page">
+            <h1>기도 제목 보기 및 수정</h1>
+            <div class="filters">
+                <input type="text" id="search-input" placeholder="기도 검색">
+                <select id="status-filter">
+                    <option value="all">모두 보기</option>
+                    <option value="completed" >완료</option>
+                    <option value="not-completed" selected>미완료</option>
+                </select>
+                <select id="category-filter">
+                    <option value="all">모든 카테고리</option>
+                    <option value="VIP">VIP</option>
+                    <option value="가족">가족</option>
+                    <option value="목장">목장</option>
+                    <option value="교회">교회</option>
+                    <option value="나라">나라</option>
+                </select>
+            </div>
+            <ul id="prayer-list"></ul>
+        </div>
+    </div>
+    <script src="scripts.js"></script>
+</body>
+</html>
