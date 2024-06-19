@@ -87,7 +87,8 @@ form button:hover {
     margin-bottom: 20px;
 }
 
-.filters input, .filters select {
+.filters input,
+.filters select {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -108,10 +109,20 @@ ul li {
     align-items: center;
 }
 
-ul li.completed {
-    text-decoration: line-through;
+ul li span {
+    display: block;
+}
+
+.prayerDetails {
+    white-space: pre-line;
+}
+
+
+ul li span.completed {
+    /* text-decoration: line-through; */
     color: #aaa;
 }
+
 
 ul li button {
     background: none;

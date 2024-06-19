@@ -13,16 +13,23 @@ document.addEventListener('DOMContentLoaded', function () {
     const categoryFilter = document.getElementById('category-filter');
 
     let prayers = JSON.parse(localStorage.getItem('prayers')) || [];
-    let editingIndex = null;
+    let editingId = null;
 
     const savePrayers = () => {
         localStorage.setItem('prayers', JSON.stringify(prayers));
     };
 
-    const addPrayerToList = (prayer, index) => {
+    const addPrayerToList = (prayer) => {
         const li = document.createElement('li');
+        let prayerDetails = document.createElement('div');
+        prayerDetails.classList.add('prayerDetails');
+        const prayerDates = document.createElement('span');
         const prayerText = document.createElement('span');
-        prayerText.textContent = `${prayer.text} (${prayer.category}) - ${prayer.date}`;
+        prayerDates.textContent = `[시작일:${prayer.startDate} 수정일:${prayer.modifyDate} 완료일:${prayer.endDate}]`;
+        prayerText.textContent = `${prayer.text} (${prayer.category})`;
+        prayerDetails.appendChild(prayerDates);
+        prayerDetails.appendChild(prayerText);
+
         if (prayer.completed) {
             prayerText.classList.add('completed');
         }
@@ -33,7 +40,9 @@ document.addEventListener('DOMContentLoaded', function () {
         editButton.addEventListener('click', () => {
             prayerInput.value = prayer.text;
             categorySelect.value = prayer.category;
-            editingIndex = index;
+            editingId = prayer.id;
+            const btnSubmit = document.getElementById('btn-submit');
+            btnSubmit.textContent = '수정';
             switchPage('add');
         });
 
@@ -41,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
         deleteButton.textContent = '삭제';
         deleteButton.classList.add('delete');
         deleteButton.addEventListener('click', () => {
-            prayers.splice(index, 1);
+            prayers = prayers.filter(p => p.id !== prayer.id);
             savePrayers();
             renderPrayers();
         });
@@ -50,11 +59,16 @@ document.addEventListener('DOMContentLoaded', function () {
         toggleButton.textContent = prayer.completed ? '미완료' : '완료';
         toggleButton.addEventListener('click', () => {
             prayer.completed = !prayer.completed;
+            if (prayer.completed) {
+                prayer.endDate = new Date().toLocaleDateString();
+            }
+            else {
+                prayer.endDate = '';
+            }
             savePrayers();
             renderPrayers();
         });
-
-        li.appendChild(prayerText);
+        li.appendChild(prayerDetails);
         li.appendChild(toggleButton);
         li.appendChild(editButton);
         li.appendChild(deleteButton);
@@ -69,8 +83,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const matchesCategory = categoryFilter.value === 'all' || prayer.category === categoryFilter.value;
             return matchesSearch && matchesStatus && matchesCategory;
         });
-        filteredPrayers.forEach((prayer, index) => {
-            addPrayerToList(prayer, index);
+        filteredPrayers.forEach(prayer => {
+            addPrayerToList(prayer);
         });
     };
 
@@ -78,15 +92,31 @@ document.addEventListener('DOMContentLoaded', function () {
         event.preventDefault();
         const prayerText = prayerInput.value.trim();
         const prayerCategory = categorySelect.value;
-        const prayerDate = new Date().toLocaleDateString();
+        const prayerStartDate = new Date().toLocaleDateString();
+        const prayerModifyDate = new Date().toLocaleDateString();
+        const prayerEndDate = new Date().toLocaleDateString();
         if (prayerText !== '') {
-            if (editingIndex !== null) {
-                prayers[editingIndex].text = prayerText;
-                prayers[editingIndex].category = prayerCategory;
-                prayers[editingIndex].date = prayerDate;
-                editingIndex = null;
+            if (editingId !== null) {
+                const prayerIndex = prayers.findIndex(p => p.id === editingId);
+                if (prayerIndex !== -1) {
+                    prayers[prayerIndex].text = prayerText;
+                    prayers[prayerIndex].category = prayerCategory;
+                    prayers[prayerIndex].modifyDate = prayerModifyDate;
+                }
+                editingId = null;
+                const btnSubmit = document.getElementById('btn-submit');
+                btnSubmit.textContent = '추가';
             } else {
-                prayers.push({ text: prayerText, category: prayerCategory, date: prayerDate, completed: false });
+                const newPrayer = {
+                    id: Date.now(),
+                    text: prayerText,
+                    category: prayerCategory,
+                    startDate: prayerStartDate,
+                    modifyDate: '',
+                    endDate: '',
+                    completed: false
+                };
+                prayers.push(newPrayer);
             }
             savePrayers();
             renderPrayers();
@@ -102,6 +132,8 @@ document.addEventListener('DOMContentLoaded', function () {
         } else if (page === 'view') {
             addPrayerPage.classList.remove('active');
             viewPrayersPage.classList.add('active');
+            const btnSubmit = document.getElementById('btn-submit');
+            btnSubmit.textContent = '추가';
         }
     };
 

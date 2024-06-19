@@ -15,7 +15,6 @@
         <div id="add-prayer-page" class="page">
             <h1>기도 제목 추가</h1>
             <form id="prayer-form">
-                <textarea id="prayer-input" placeholder="기도 제목을 입력하세요" required rows="5"></textarea>
                 <select id="category-select">
                     <option value="VIP">VIP</option>
                     <option value="가족">가족</option>
@@ -23,7 +22,8 @@
                     <option value="교회">교회</option>
                     <option value="나라">나라</option>
                 </select>
-                <button type="submit">추가</button>
+                <textarea id="prayer-input" placeholder="기도 제목을 입력하세요" required rows="10"></textarea>
+                <button id="btn-submit" type="submit">추가</button>
             </form>
         </div>
         <div id="view-prayers-page" class="page">
