@@ -245,12 +245,12 @@ form button:hover {
     color: gray;
 }
 
-.prayer-card .prayerText{
+/* .prayer-card .prayer-text{
     white-space : 'pre-line';
     text-align: 'left';
     margin-top: '10px';
     word-break: "break-all";
-}
+} */
 
 .prayer-card .buttons {
     float: right;

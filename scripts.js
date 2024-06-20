@@ -34,6 +34,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const prayerText = document.createElement('div');
         prayerText.classList.add('prayer-text');
+        prayerText.style.whiteSpace = "pre-line";
+        prayerText.style.marginTop = "10px";
+        prayerText.style.wordBreak = "break-all";
+        prayerText.style.textAlign = "left";
+
         const prayerCategory = document.createElement('div');
         prayerCategory.classList.add('prayer-head');
         prayerText.textContent = prayer.text;
