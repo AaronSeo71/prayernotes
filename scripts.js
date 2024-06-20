@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
         prayerCategory.classList.add('prayer-head');
         prayerText.textContent = prayer.text;
         prayerCategory.textContent = `[${prayer.category}][시작:${prayer.startdate}-편집:${prayer.editdate}-응답:${prayer.answerdate}]`;
-        prayerCategory.style.display="inline-block";
+        prayerCategory.style.display = "inline-block";
 
 
         if (prayer.completed) {
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
         div.appendChild(prayerCategory);
         div.appendChild(buttons);
         div.appendChild(prayerText);
-        
+
         prayerList.appendChild(div);
     };
 
@@ -146,8 +146,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     text: prayerText,
                     category: prayerCategory,
                     startdate: prayerStartDate,
-                    editdate:'',
-                    answerdate:'',
+                    editdate: '',
+                    answerdate: '',
                     completed: false
                 };
                 prayers.push(newPrayer);
@@ -193,16 +193,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const blob = new Blob([JSON.stringify(prayers, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
+        const offset = new Date().getTimezoneOffset() * 60000;
+        const today = new Date(Date.now()-offset);
+        fileversion = today.toISOString().split('.')[0].replace(/[^\d]/gi, '');
         a.href = url;
-        a.download = 'prayers.json';
+        a.download = 'prayers-' + fileversion + '.json';
         a.click();
         URL.revokeObjectURL(url);
     });
-    
+
     importPrayersBtn.addEventListener('click', () => {
         fileInput.click();
     });
-    
+
     fileInput.addEventListener('change', (event) => {
         const file = event.target.files[0];
         if (file) {
