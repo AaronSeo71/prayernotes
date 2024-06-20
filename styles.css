@@ -1,4 +1,26 @@
 /* styles.css */
+
+.paper {
+    box-shadow: 0px 0px 5px 0px #888;
+}
+
+.lines {
+    background-image: repeating-linear-gradient(white 0px, white 24px, rgb(162, 187, 207) 25px);
+}
+
+.text {
+    position: absolute;
+    top: 65px;
+    left: 55px;
+    bottom: 10px;
+    right: 10px;
+    line-height: 25px;
+    font-family: 'Indie Flower';
+    overflow: hidden;
+    outline: none;
+}
+
+
 body {
     font-family: Arial, sans-serif;
     background-color: #f0f0f0;
@@ -88,7 +110,8 @@ form button:hover {
     margin-bottom: 20px;
 }
 
-.filters input, .filters select {
+.filters input,
+.filters select {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -96,14 +119,6 @@ form button:hover {
 
 .carousel {
     position: relative;
-    overflow: hidden;
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
-    background: #fefefe url('notebook-lines.png') repeat-y; /* 줄이 쳐진 노트 이미지 */
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -112,14 +127,15 @@ form button:hover {
     transition: transform 0.5s ease-in-out;
 }
 
-.carousel-inner > div {
+.carousel-inner>div {
     min-width: 100%;
     box-sizing: border-box;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    white-space: pre-line; /* 줄 바꿈을 표현하도록 */
+    white-space: pre-line;
+    /* 줄 바꿈을 표현하도록 */
 }
 
 .carousel-btn {
@@ -192,7 +208,7 @@ form button:hover {
     cursor: pointer;
 }
 
-/* Card style */
+/* Card style
 .prayer-card {
     background-color: #fff;
     padding: 20px;
@@ -203,14 +219,42 @@ form button:hover {
     text-align: center;
 }
 
+.prayer-text {
+    position: absolute;
+    top: 65px;
+    left: 55px;
+    bottom: 10px;
+    right: 10px;
+    line-height: 25px;
+    font-family: 'Indie Flower';
+    overflow: hidden;
+    outline: none;
+}
+
 .prayer-card span {
     display: block;
     margin-bottom: 10px;
+} */
+
+.prayer-card {
+    min-height: 300px;
+    padding: 10px;
+}
+.prayer-card .completed {
+    /* text-decoration: line-through; */
+    color: gray;
 }
 
-.prayer-card .completed {
-    text-decoration: line-through;
-    color: gray;
+.prayer-card .prayerText{
+    white-space : 'pre-line';
+    text-align: 'left';
+    margin-top: '10px';
+    word-break: "break-all";
+}
+
+.prayer-card .buttons {
+    float: right;
+    display: inline-block;
 }
 
 .prayer-card .buttons button {
@@ -219,6 +263,7 @@ form button:hover {
     border: none;
     border-radius: 4px;
     cursor: pointer;
+
 }
 
 .prayer-card .buttons .edit {

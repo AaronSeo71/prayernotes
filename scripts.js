@@ -14,6 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const prayerList = document.getElementById('prayer-list');
     const currentIndexDisplay = document.getElementById('current-index');
     const totalCountDisplay = document.getElementById('total-count');
+    const exportPrayersBtn = document.getElementById('export-prayers-btn');
+    const importPrayersBtn = document.getElementById('import-prayers-btn');
+    const fileInput = document.getElementById('file-input');
+
 
     let prayers = JSON.parse(localStorage.getItem('prayers')) || [];
     let currentIndex = 0;
@@ -25,17 +29,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const addPrayerToList = (prayer) => {
         const div = document.createElement('div');
+        //div.classList.add('prayer-card');
         div.classList.add('prayer-card');
 
-        const prayerDetails = document.createElement('div');
-        const prayerText = document.createElement('span');
-        const prayerCategory = document.createElement('span');
+        const prayerText = document.createElement('div');
+        prayerText.classList.add('prayer-text');
+        const prayerCategory = document.createElement('div');
+        prayerCategory.classList.add('prayer-head');
         prayerText.textContent = prayer.text;
-        prayerText.style.whiteSpace = 'pre-line'; // 줄 바꿈 표현
-        prayerText.style.textAlign = 'left';
-        prayerCategory.textContent = `(${prayer.category}) - [시작:${prayer.startdate}, 편집:${prayer.editdate},응답:${prayer.answerdate}]`;
-        prayerDetails.appendChild(prayerCategory);
-        prayerDetails.appendChild(prayerText);
+        prayerCategory.textContent = `[${prayer.category}][시작:${prayer.startdate}-편집:${prayer.editdate}-응답:${prayer.answerdate}]`;
+        prayerCategory.style.display="inline-block";
+
 
         if (prayer.completed) {
             prayerText.classList.add('completed');
@@ -64,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         const toggleButton = document.createElement('button');
-        toggleButton.textContent = prayer.completed ? '미완료' : '완료';
+        toggleButton.textContent = prayer.completed ? '미응답' : '응답';
         toggleButton.classList.add('toggle');
         toggleButton.addEventListener('click', () => {
             prayer.completed = !prayer.completed;
@@ -83,8 +87,10 @@ document.addEventListener('DOMContentLoaded', () => {
         buttons.appendChild(deleteButton);
         buttons.appendChild(toggleButton);
 
-        div.appendChild(prayerDetails);
+        div.appendChild(prayerCategory);
         div.appendChild(buttons);
+        div.appendChild(prayerText);
+        
         prayerList.appendChild(div);
     };
 
@@ -183,5 +189,40 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    exportPrayersBtn.addEventListener('click', () => {
+        const blob = new Blob([JSON.stringify(prayers, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'prayers.json';
+        a.click();
+        URL.revokeObjectURL(url);
+    });
+    
+    importPrayersBtn.addEventListener('click', () => {
+        fileInput.click();
+    });
+    
+    fileInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const importedPrayers = JSON.parse(e.target.result);
+                    if (Array.isArray(importedPrayers)) {
+                        prayers = importedPrayers;
+                        savePrayers();
+                        renderPrayers();
+                    } else {
+                        alert('잘못된 파일 형식입니다.');
+                    }
+                } catch (error) {
+                    alert('파일을 읽는 중 오류가 발생했습니다.');
+                }
+            };
+            reader.readAsText(file);
+        }
+    });
     renderPrayers();
 });

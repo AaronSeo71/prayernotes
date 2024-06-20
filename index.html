@@ -1,15 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>기도 노트</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <div class="container">
         <nav>
             <button id="add-prayer-btn">기도 제목 추가</button>
+            <button id="export-prayers-btn">내보내기</button>
+            <button id="import-prayers-btn">가져오기</button>
+            <input type="file" id="file-input" style="display: none;">
         </nav>
         <div id="add-prayer-popup" class="popup">
             <div class="popup-content">
@@ -34,8 +39,8 @@
                 <input type="text" id="search-input" placeholder="기도 검색">
                 <select id="status-filter">
                     <option value="all">모두 보기</option>
-                    <option value="completed">완료</option>
-                    <option value="not-completed">미완료</option>
+                    <option value="completed">응답</option>
+                    <option value="not-completed">미응답</option>
                 </select>
                 <select id="category-filter">
                     <option value="all">모든 카테고리</option>
@@ -46,8 +51,8 @@
                     <option value="나라">나라</option>
                 </select>
             </div>
-            <div id="prayer-carousel" class="carousel">
-                <div id="prayer-list" class="carousel-inner"></div>
+            <div id="prayer-carousel" class="carousel paper">
+                <div id="prayer-list" class="lines"></div>
                 <button id="prev-prayer-btn" class="carousel-btn prev">◀</button>
                 <button id="next-prayer-btn" class="carousel-btn next">▶</button>
             </div>
@@ -58,4 +63,5 @@
     </div>
     <script src="scripts.js"></script>
 </body>
+
 </html>
