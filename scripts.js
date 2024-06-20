@@ -1,18 +1,22 @@
 // scripts.js
-document.addEventListener('DOMContentLoaded', function () {
-    const addPrayerPage = document.getElementById('add-prayer-page');
-    const viewPrayersPage = document.getElementById('view-prayers-page');
+document.addEventListener('DOMContentLoaded', () => {
     const addPrayerBtn = document.getElementById('add-prayer-btn');
-    const viewPrayersBtn = document.getElementById('view-prayers-btn');
+    const addPrayerPopup = document.getElementById('add-prayer-popup');
+    const closePopupBtn = addPrayerPopup.querySelector('.close');
     const prayerForm = document.getElementById('prayer-form');
     const prayerInput = document.getElementById('prayer-input');
     const categorySelect = document.getElementById('category-select');
-    const prayerList = document.getElementById('prayer-list');
     const searchInput = document.getElementById('search-input');
     const statusFilter = document.getElementById('status-filter');
     const categoryFilter = document.getElementById('category-filter');
+    const prevPrayerBtn = document.getElementById('prev-prayer-btn');
+    const nextPrayerBtn = document.getElementById('next-prayer-btn');
+    const prayerList = document.getElementById('prayer-list');
+    const currentIndexDisplay = document.getElementById('current-index');
+    const totalCountDisplay = document.getElementById('total-count');
 
     let prayers = JSON.parse(localStorage.getItem('prayers')) || [];
+    let currentIndex = 0;
     let editingId = null;
 
     const savePrayers = () => {
@@ -20,19 +24,25 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     const addPrayerToList = (prayer) => {
-        const li = document.createElement('li');
-        let prayerDetails = document.createElement('div');
-        prayerDetails.classList.add('prayerDetails');
-        const prayerDates = document.createElement('span');
+        const div = document.createElement('div');
+        div.classList.add('prayer-card');
+
+        const prayerDetails = document.createElement('div');
         const prayerText = document.createElement('span');
-        prayerDates.textContent = `[시작일:${prayer.startDate} 수정일:${prayer.modifyDate} 완료일:${prayer.endDate}]`;
-        prayerText.textContent = `${prayer.text} (${prayer.category})`;
-        prayerDetails.appendChild(prayerDates);
+        const prayerCategory = document.createElement('span');
+        prayerText.textContent = prayer.text;
+        prayerText.style.whiteSpace = 'pre-line'; // 줄 바꿈 표현
+        prayerText.style.textAlign = 'left';
+        prayerCategory.textContent = `(${prayer.category}) - [시작:${prayer.startdate}, 편집:${prayer.editdate},응답:${prayer.answerdate}]`;
+        prayerDetails.appendChild(prayerCategory);
         prayerDetails.appendChild(prayerText);
 
         if (prayer.completed) {
             prayerText.classList.add('completed');
         }
+
+        const buttons = document.createElement('div');
+        buttons.classList.add('buttons');
 
         const editButton = document.createElement('button');
         editButton.textContent = '편집';
@@ -41,9 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
             prayerInput.value = prayer.text;
             categorySelect.value = prayer.category;
             editingId = prayer.id;
-            const btnSubmit = document.getElementById('btn-submit');
-            btnSubmit.textContent = '수정';
-            switchPage('add');
+            showPopup();
         });
 
         const deleteButton = document.createElement('button');
@@ -57,22 +65,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const toggleButton = document.createElement('button');
         toggleButton.textContent = prayer.completed ? '미완료' : '완료';
+        toggleButton.classList.add('toggle');
         toggleButton.addEventListener('click', () => {
             prayer.completed = !prayer.completed;
             if (prayer.completed) {
-                prayer.endDate = new Date().toLocaleDateString();
+                prayer.answerdate = new Date().toLocaleDateString();
             }
             else {
-                prayer.endDate = '';
+                prayer.answerdate = '';
             }
+
             savePrayers();
             renderPrayers();
         });
-        li.appendChild(prayerDetails);
-        li.appendChild(toggleButton);
-        li.appendChild(editButton);
-        li.appendChild(deleteButton);
-        prayerList.appendChild(li);
+
+        buttons.appendChild(editButton);
+        buttons.appendChild(deleteButton);
+        buttons.appendChild(toggleButton);
+
+        div.appendChild(prayerDetails);
+        div.appendChild(buttons);
+        prayerList.appendChild(div);
     };
 
     const renderPrayers = () => {
@@ -83,9 +96,27 @@ document.addEventListener('DOMContentLoaded', function () {
             const matchesCategory = categoryFilter.value === 'all' || prayer.category === categoryFilter.value;
             return matchesSearch && matchesStatus && matchesCategory;
         });
-        filteredPrayers.forEach(prayer => {
-            addPrayerToList(prayer);
-        });
+
+        if (filteredPrayers.length > 0) {
+            const filteredPrayer = filteredPrayers[currentIndex % filteredPrayers.length];
+            addPrayerToList(filteredPrayer);
+            currentIndexDisplay.textContent = currentIndex + 1;
+            totalCountDisplay.textContent = filteredPrayers.length;
+        } else {
+            currentIndexDisplay.textContent = '0';
+            totalCountDisplay.textContent = '0';
+        }
+    };
+
+    const showPopup = () => {
+        addPrayerPopup.classList.add('active');
+    };
+
+    const hidePopup = () => {
+        addPrayerPopup.classList.remove('active');
+        prayerInput.value = '';
+        categorySelect.value = 'VIP';
+        editingId = null;
     };
 
     prayerForm.addEventListener('submit', (event) => {
@@ -93,27 +124,24 @@ document.addEventListener('DOMContentLoaded', function () {
         const prayerText = prayerInput.value.trim();
         const prayerCategory = categorySelect.value;
         const prayerStartDate = new Date().toLocaleDateString();
-        const prayerModifyDate = new Date().toLocaleDateString();
-        const prayerEndDate = new Date().toLocaleDateString();
+        const prayerEditDate = new Date().toLocaleDateString();
         if (prayerText !== '') {
             if (editingId !== null) {
                 const prayerIndex = prayers.findIndex(p => p.id === editingId);
                 if (prayerIndex !== -1) {
                     prayers[prayerIndex].text = prayerText;
                     prayers[prayerIndex].category = prayerCategory;
-                    prayers[prayerIndex].modifyDate = prayerModifyDate;
+                    prayers[prayerIndex].editdate = prayerEditDate;
                 }
                 editingId = null;
-                const btnSubmit = document.getElementById('btn-submit');
-                btnSubmit.textContent = '추가';
             } else {
                 const newPrayer = {
                     id: Date.now(),
                     text: prayerText,
                     category: prayerCategory,
-                    startDate: prayerStartDate,
-                    modifyDate: '',
-                    endDate: '',
+                    startdate: prayerStartDate,
+                    editdate:'',
+                    answerdate:'',
                     completed: false
                 };
                 prayers.push(newPrayer);
@@ -122,27 +150,38 @@ document.addEventListener('DOMContentLoaded', function () {
             renderPrayers();
             prayerInput.value = '';
             categorySelect.value = 'VIP';
+            hidePopup();
         }
     });
 
-    const switchPage = (page) => {
-        if (page === 'add') {
-            addPrayerPage.classList.add('active');
-            viewPrayersPage.classList.remove('active');
-        } else if (page === 'view') {
-            addPrayerPage.classList.remove('active');
-            viewPrayersPage.classList.add('active');
-            const btnSubmit = document.getElementById('btn-submit');
-            btnSubmit.textContent = '추가';
-        }
-    };
+    addPrayerBtn.addEventListener('click', showPopup);
+    closePopupBtn.addEventListener('click', hidePopup);
 
-    addPrayerBtn.addEventListener('click', () => switchPage('add'));
-    viewPrayersBtn.addEventListener('click', () => switchPage('view'));
     searchInput.addEventListener('input', renderPrayers);
     statusFilter.addEventListener('change', renderPrayers);
     categoryFilter.addEventListener('change', renderPrayers);
 
-    switchPage('view'); // 기본 페이지는 기도 제목 보기 페이지
+    prevPrayerBtn.addEventListener('click', () => {
+        if (currentIndex > 0) {
+            currentIndex = (currentIndex - 1 + prayers.length) % prayers.length;
+            renderPrayers();
+        }
+    });
+
+    nextPrayerBtn.addEventListener('click', () => {
+        if (currentIndex < prayers.length - 1) {
+            currentIndex = (currentIndex + 1) % prayers.length;
+            renderPrayers();
+        }
+    });
+
+    currentIndexDisplay.addEventListener('click', (event) => {
+        const index = parseInt(event.target.textContent) - 1;
+        if (!isNaN(index) && index >= 0 && index < prayers.length) {
+            currentIndex = index;
+            renderPrayers();
+        }
+    });
+
     renderPrayers();
 });
