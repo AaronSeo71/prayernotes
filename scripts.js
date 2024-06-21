@@ -217,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const a = document.createElement('a');
         const offset = new Date().getTimezoneOffset() * 60000;
         const today = new Date(Date.now()-offset);
-        fileversion = today.toISOString().split('.')[0].replace(/[^\d]/gi, '');
+        fileversion = today.toISOString().split('.')[0].replace(/[^\d]/gi, '.');
         a.href = url;
         a.download = 'prayers-' + fileversion + '.json';
         a.click();
