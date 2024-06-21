@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const prayerCategory = document.createElement('div');
         prayerCategory.classList.add('prayer-head');
         prayerText.textContent = prayer.text;
-        prayerCategory.textContent = `[${prayer.category}][시작:${prayer.startdate}-편집:${prayer.editdate}-응답:${prayer.answerdate}]`;
+        prayerCategory.textContent = `[${prayer.category}][시작:${prayer.startdate}][편집:${prayer.editdate}][응답:${prayer.answerdate}]`;
         prayerCategory.style.display = "inline-block";
 
 
@@ -109,7 +109,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (filteredPrayers.length > 0) {
-            const filteredPrayer = filteredPrayers[currentIndex % filteredPrayers.length];
+            if(currentIndex >= filteredPrayers.length) {
+                currentIndex = filteredPrayers.length-1;
+            }
+            const filteredPrayer = filteredPrayers[currentIndex];
             addPrayerToList(filteredPrayer);
             currentIndexDisplay.textContent = currentIndex + 1;
             totalCountDisplay.textContent = filteredPrayers.length;
@@ -160,8 +163,8 @@ document.addEventListener('DOMContentLoaded', () => {
             savePrayers();
             renderPrayers();
             prayerInput.value = '';
-            categorySelect.value = 'VIP';
-            hidePopup();
+            //categorySelect.value = 'VIP';
+            // hidePopup();
         }
     });
 
@@ -172,6 +175,20 @@ document.addEventListener('DOMContentLoaded', () => {
     statusFilter.addEventListener('change', renderPrayers);
     categoryFilter.addEventListener('change', renderPrayers);
 
+    prevPrayerBtn.addEventListener('click', () => {
+        if (currentIndex > 0) {
+            currentIndex = (currentIndex - 1 ) % totalCountDisplay.textContent;
+            renderPrayers();
+        }
+    });
+
+    nextPrayerBtn.addEventListener('click', () => {
+        if (currentIndex < totalCountDisplay.textContent-1) {
+            currentIndex = (currentIndex + 1) % totalCountDisplay.textContent;
+            renderPrayers();
+        }
+    });
+ /* 
     prevPrayerBtn.addEventListener('click', () => {
         if (currentIndex > 0) {
             currentIndex = (currentIndex - 1 + prayers.length) % prayers.length;
@@ -185,14 +202,14 @@ document.addEventListener('DOMContentLoaded', () => {
             renderPrayers();
         }
     });
-
-    currentIndexDisplay.addEventListener('click', (event) => {
+    
+   currentIndexDisplay.addEventListener('click', (event) => {
         const index = parseInt(event.target.textContent) - 1;
         if (!isNaN(index) && index >= 0 && index < prayers.length) {
             currentIndex = index;
             renderPrayers();
         }
-    });
+    }); */
 
     exportPrayersBtn.addEventListener('click', () => {
         const blob = new Blob([JSON.stringify(prayers, null, 2)], { type: 'application/json' });

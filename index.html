@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
@@ -35,7 +35,7 @@
             </div>
         </div>
         <div id="view-prayers-page" class="page active">
-            <h1>기도 제목 보기 및 수정</h1>
+            <h1>기도 노트</h1>
             <div class="filters">
                 <input type="text" id="search-input" placeholder="기도 검색">
                 <select id="status-filter">
@@ -52,15 +52,16 @@
                     <option value="일터">일터</option>
                     <option value="나라">나라</option>
                 </select>
+                <div class="carousel-index">
+                    <span id="current-index">1</span> / <span id="total-count">1</span>
+                </div>
             </div>
             <div id="prayer-carousel" class="carousel paper">
                 <div id="prayer-list" class="lines"></div>
                 <button id="prev-prayer-btn" class="carousel-btn prev">◀</button>
                 <button id="next-prayer-btn" class="carousel-btn next">▶</button>
             </div>
-            <div class="carousel-index">
-                <span id="current-index">1</span> / <span id="total-count">1</span>
-            </div>
+           
         </div>
     </div>
     <script src="scripts.js"></script>

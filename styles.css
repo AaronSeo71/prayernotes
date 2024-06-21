@@ -62,6 +62,7 @@ nav button:hover {
 
 .page {
     display: none;
+    text-align: center;
 }
 
 .page.active {
@@ -165,7 +166,7 @@ form button:hover {
 }
 
 .carousel-index span {
-    cursor: pointer;
+    /* cursor: pointer; */
     margin: 0 5px;
 }
 
@@ -239,10 +240,16 @@ form button:hover {
 .prayer-card {
     min-height: 300px;
     padding: 10px;
+    text-align: left;
 }
 .prayer-card .completed {
     /* text-decoration: line-through; */
     color: gray;
+}
+
+.prayer-head {
+    color:cadetblue;
+    font-size:smaller;
 }
 
 /* .prayer-card .prayer-text{
