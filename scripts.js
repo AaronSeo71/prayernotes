@@ -78,10 +78,12 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleButton.addEventListener('click', () => {
             prayer.completed = !prayer.completed;
             if (prayer.completed) {
-                prayer.answerdate = new Date().toLocaleDateString();
+                const offset = new Date().getTimezoneOffset() * 60000;
+                const today = new Date(Date.now()-offset).toISOString().substring(0,10).replace(/-/g,'.');
+                prayer.answerdate = today;
             }
             else {
-                prayer.answerdate = '';
+                prayer.answerdate = '****.**.**';
             }
 
             savePrayers();
@@ -137,8 +139,10 @@ document.addEventListener('DOMContentLoaded', () => {
         event.preventDefault();
         const prayerText = prayerInput.value.trim();
         const prayerCategory = categorySelect.value;
-        const prayerStartDate = new Date().toLocaleDateString();
-        const prayerEditDate = new Date().toLocaleDateString();
+        const offset = new Date().getTimezoneOffset() * 60000;
+        const today = new Date(Date.now()-offset).toISOString().substring(0,10).replace(/-/g,'.');
+        const prayerStartDate = today;
+        const prayerEditDate = today;
         if (prayerText !== '') {
             if (editingId !== null) {
                 const prayerIndex = prayers.findIndex(p => p.id === editingId);
@@ -154,8 +158,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     text: prayerText,
                     category: prayerCategory,
                     startdate: prayerStartDate,
-                    editdate: '',
-                    answerdate: '',
+                    editdate: '****.**.**',
+                    answerdate: '****.**.**',
                     completed: false
                 };
                 prayers.push(newPrayer);
