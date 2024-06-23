@@ -261,7 +261,7 @@ form button:hover {
 
 .prayer-card .buttons {
     float: right;
-    display: inline-block;
+    display: inline-end;
 }
 
 .prayer-card .buttons button {
