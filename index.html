@@ -44,7 +44,7 @@
                     <option value="not-completed">미응답</option>
                 </select>
                 <select id="category-filter">
-                    <option value="all">모든 카테고리</option>
+                    <option value="all">모든 그룹</option>
                     <option value="VIP">VIP</option>
                     <option value="가족">가족</option>
                     <option value="목장">목장</option>
@@ -52,18 +52,18 @@
                     <option value="일터">일터</option>
                     <option value="나라">나라</option>
                 </select>
-                <div class="carousel-index">
+                <!-- <div class="carousel-index">
                     <span id="current-index">1</span> / <span id="total-count">1</span>
-                </div>
+                </div> -->
             </div>
             <div id="prayer-carousel" class="carousel paper">
-                <div id="prayer-list" class="lines"></div>
-                <button id="prev-prayer-btn" class="carousel-btn prev">◀</button>
-                <button id="next-prayer-btn" class="carousel-btn next">▶</button>
+                <swiper-container id="prayer-list" class="lines" navigation="true" pagination="true" pagination-type="fraction" mousewheel="true"></swiper-container>
             </div>
-           
+<!--             <button id="prev-prayer-btn" class="carousel-btn prev">◀</button>
+            <button id="next-prayer-btn" class="carousel-btn next">▶</button>     -->       
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
     <script src="scripts.js"></script>
 </body>
 

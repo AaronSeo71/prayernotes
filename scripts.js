@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const categoryFilter = document.getElementById('category-filter');
     const prevPrayerBtn = document.getElementById('prev-prayer-btn');
     const nextPrayerBtn = document.getElementById('next-prayer-btn');
+
     const prayerList = document.getElementById('prayer-list');
     const currentIndexDisplay = document.getElementById('current-index');
     const totalCountDisplay = document.getElementById('total-count');
@@ -28,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const addPrayerToList = (prayer) => {
-        const div = document.createElement('div');
+        const div = document.createElement('swiper-slide');
         //div.classList.add('prayer-card');
         div.classList.add('prayer-card');
 
@@ -109,8 +110,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const matchesCategory = categoryFilter.value === 'all' || prayer.category === categoryFilter.value;
             return matchesSearch && matchesStatus && matchesCategory;
         });
-
-        if (filteredPrayers.length > 0) {
+        filteredPrayers.forEach(prayer => {
+            addPrayerToList(prayer);
+        });
+        prayerList.swiper.update();
+        /*  if (filteredPrayers.length > 0) {
             if(currentIndex >= filteredPrayers.length) {
                 currentIndex = filteredPrayers.length-1;
             }
@@ -121,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             currentIndexDisplay.textContent = '0';
             totalCountDisplay.textContent = '0';
-        }
+        } */
     };
 
     const showPopup = () => {
@@ -178,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
     searchInput.addEventListener('input', renderPrayers);
     statusFilter.addEventListener('change', renderPrayers);
     categoryFilter.addEventListener('change', renderPrayers);
-
+ /* 
     prevPrayerBtn.addEventListener('click', () => {
         if (currentIndex > 0) {
             currentIndex = (currentIndex - 1 ) % totalCountDisplay.textContent;
@@ -192,7 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
             renderPrayers();
         }
     });
- /* 
+
     prevPrayerBtn.addEventListener('click', () => {
         if (currentIndex > 0) {
             currentIndex = (currentIndex - 1 + prayers.length) % prayers.length;
