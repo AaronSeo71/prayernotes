@@ -1,4 +1,37 @@
 // scripts.js
+const swiperEl = document.querySelector('swiper-container')
+const params = {
+    injectStyles: [`
+      .swiper-pagination-bullet {
+        width: 20px;
+        height: 20px;
+        text-align: center;
+        line-height: 20px;
+        font-size: 12px;
+        color: #000;
+        opacity: 1;
+        background: rgba(0, 0, 0, 0.2);
+      }
+
+      .swiper-pagination-bullet-active {
+        color: #fff;
+        background: #007aff;
+      }
+      `],
+    pagination: {
+        clickable: true,
+        renderBullet: function (index, className) {
+            return '<span class="' + className + '">' + (index + 1) + "</span>";
+        },
+    },
+    scrollbar:{
+        draggable: true,
+        dragSize : 30,
+    }
+}
+Object.assign(swiperEl, params)
+swiperEl.initialize();
+
 document.addEventListener('DOMContentLoaded', () => {
     const addPrayerBtn = document.getElementById('add-prayer-btn');
     const addPrayerPopup = document.getElementById('add-prayer-popup');
@@ -80,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
             prayer.completed = !prayer.completed;
             if (prayer.completed) {
                 const offset = new Date().getTimezoneOffset() * 60000;
-                const today = new Date(Date.now()-offset).toISOString().substring(0,10).replace(/-/g,'.');
+                const today = new Date(Date.now() - offset).toISOString().substring(0, 10).replace(/-/g, '.');
                 prayer.answerdate = today;
             }
             else {
@@ -144,7 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const prayerText = prayerInput.value.trim();
         const prayerCategory = categorySelect.value;
         const offset = new Date().getTimezoneOffset() * 60000;
-        const today = new Date(Date.now()-offset).toISOString().substring(0,10).replace(/-/g,'.');
+        const today = new Date(Date.now() - offset).toISOString().substring(0, 10).replace(/-/g, '.');
         const prayerStartDate = today;
         const prayerEditDate = today;
         if (prayerText !== '') {
@@ -182,49 +215,49 @@ document.addEventListener('DOMContentLoaded', () => {
     searchInput.addEventListener('input', renderPrayers);
     statusFilter.addEventListener('change', renderPrayers);
     categoryFilter.addEventListener('change', renderPrayers);
- /* 
-    prevPrayerBtn.addEventListener('click', () => {
-        if (currentIndex > 0) {
-            currentIndex = (currentIndex - 1 ) % totalCountDisplay.textContent;
-            renderPrayers();
-        }
-    });
-
-    nextPrayerBtn.addEventListener('click', () => {
-        if (currentIndex < totalCountDisplay.textContent-1) {
-            currentIndex = (currentIndex + 1) % totalCountDisplay.textContent;
-            renderPrayers();
-        }
-    });
-
-    prevPrayerBtn.addEventListener('click', () => {
-        if (currentIndex > 0) {
-            currentIndex = (currentIndex - 1 + prayers.length) % prayers.length;
-            renderPrayers();
-        }
-    });
-
-    nextPrayerBtn.addEventListener('click', () => {
-        if (currentIndex < prayers.length - 1) {
-            currentIndex = (currentIndex + 1) % prayers.length;
-            renderPrayers();
-        }
-    });
-    
-   currentIndexDisplay.addEventListener('click', (event) => {
-        const index = parseInt(event.target.textContent) - 1;
-        if (!isNaN(index) && index >= 0 && index < prayers.length) {
-            currentIndex = index;
-            renderPrayers();
-        }
-    }); */
+    /* 
+       prevPrayerBtn.addEventListener('click', () => {
+           if (currentIndex > 0) {
+               currentIndex = (currentIndex - 1 ) % totalCountDisplay.textContent;
+               renderPrayers();
+           }
+       });
+   
+       nextPrayerBtn.addEventListener('click', () => {
+           if (currentIndex < totalCountDisplay.textContent-1) {
+               currentIndex = (currentIndex + 1) % totalCountDisplay.textContent;
+               renderPrayers();
+           }
+       });
+   
+       prevPrayerBtn.addEventListener('click', () => {
+           if (currentIndex > 0) {
+               currentIndex = (currentIndex - 1 + prayers.length) % prayers.length;
+               renderPrayers();
+           }
+       });
+   
+       nextPrayerBtn.addEventListener('click', () => {
+           if (currentIndex < prayers.length - 1) {
+               currentIndex = (currentIndex + 1) % prayers.length;
+               renderPrayers();
+           }
+       });
+       
+      currentIndexDisplay.addEventListener('click', (event) => {
+           const index = parseInt(event.target.textContent) - 1;
+           if (!isNaN(index) && index >= 0 && index < prayers.length) {
+               currentIndex = index;
+               renderPrayers();
+           }
+       }); */
 
     exportPrayersBtn.addEventListener('click', () => {
         const blob = new Blob([JSON.stringify(prayers, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         const offset = new Date().getTimezoneOffset() * 60000;
-        const today = new Date(Date.now()-offset);
+        const today = new Date(Date.now() - offset);
         fileversion = today.toISOString().split('.')[0].replace(/[^\d]/gi, '.');
         a.href = url;
         a.download = 'prayers-' + fileversion + '.json';
