@@ -266,9 +266,6 @@ form button:hover {
     /* text-decoration: line-through; */
     color: gray;
 }
-.prayer-text{
-    overflow:auto;
-}
 
 .prayer-head {
     color:cadetblue;
