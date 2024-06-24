@@ -29,7 +29,7 @@
                         <option value="일터">일터</option>
                         <option value="나라">나라</option>
                     </select>
-                    <textarea id="prayer-input" placeholder="기도 제목을 입력하세요" rows="15" required></textarea>
+                    <textarea id="prayer-input" placeholder="기도 제목을 입력하세요" rows="15" required ></textarea>
                     <button type="submit">입력</button>
                 </form>
             </div>
@@ -38,11 +38,6 @@
             <h1>기도 노트</h1>
             <div class="filters">
                 <input type="text" id="search-input" placeholder="기도 검색">
-                <select id="status-filter">
-                    <option value="all">모두 보기</option>
-                    <option value="completed">응답</option>
-                    <option value="not-completed">미응답</option>
-                </select>
                 <select id="category-filter">
                     <option value="all">모든 그룹</option>
                     <option value="VIP">VIP</option>
@@ -52,9 +47,11 @@
                     <option value="일터">일터</option>
                     <option value="나라">나라</option>
                 </select>
-                <!-- <div class="carousel-index">
-                    <span id="current-index">1</span> / <span id="total-count">1</span>
-                </div> -->
+                <select id="status-filter">
+                    <option value="all">모두 보기</option>
+                    <option value="completed">응답</option>
+                    <option value="not-completed">미응답</option>
+                </select>
             </div>
             <div id="prayer-carousel" class="carousel paper">
                 <swiper-container id="prayer-list" class="lines" 
@@ -63,8 +60,6 @@
                 mousewheel="true">
             </swiper-container>
             </div>
-<!--             <button id="prev-prayer-btn" class="carousel-btn prev">◀</button>
-            <button id="next-prayer-btn" class="carousel-btn next">▶</button>     -->       
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
