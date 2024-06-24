@@ -228,7 +228,7 @@ form button:hover {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     justify-content: center;
-    align-items: center;
+    align-items: baseline;
     z-index: 999;
 }
 
@@ -242,7 +242,7 @@ form button:hover {
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     position: relative;
-    max-width: 400px;
+    max-width: 500px;
     width: 100%;
 }
 
@@ -253,34 +253,6 @@ form button:hover {
     font-size: 24px;
     cursor: pointer;
 }
-
-/* Card style
-.prayer-card {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 90%;
-    max-width: 500px;
-    text-align: center;
-}
-
-.prayer-text {
-    position: absolute;
-    top: 65px;
-    left: 55px;
-    bottom: 10px;
-    right: 10px;
-    line-height: 25px;
-    font-family: 'Indie Flower';
-    overflow: hidden;
-    outline: none;
-}
-
-.prayer-card span {
-    display: block;
-    margin-bottom: 10px;
-} */
 
 .prayer-card {
     min-height: 300px;
@@ -296,13 +268,6 @@ form button:hover {
     color:cadetblue;
     font-size:smaller;
 }
-
-/* .prayer-card .prayer-text{
-    white-space : 'pre-line';
-    text-align: 'left';
-    margin-top: '10px';
-    word-break: "break-all";
-} */
 
 .prayer-card .buttons {
     float: right;
