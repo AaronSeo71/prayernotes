@@ -71,7 +71,20 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('prayers', JSON.stringify(prayers));
     };
 
-    const addPrayerToList = (prayer) => {
+    const movePrayer = (index, direction) => {
+        if (direction === 'up' && index > 0) {
+            [prayers[index], prayers[index - 1]] = [prayers[index - 1], prayers[index]];
+            prayerList.swiper.slidePrev(100);
+        } else if (direction === 'down' && index < prayers.length - 1) {
+            [prayers[index], prayers[index + 1]] = [prayers[index + 1], prayers[index]];
+            prayerList.swiper.slideNext(100);
+
+        }
+        savePrayers();
+        renderPrayers();
+    };
+
+    const addPrayerToList = (prayer, index) => {
         const div = document.createElement('swiper-slide');
         div.classList.add('prayer-card');
 
@@ -132,9 +145,26 @@ document.addEventListener('DOMContentLoaded', () => {
             renderPrayers();
         });
 
+        // New Up and Down Buttons
+        const upButton = document.createElement('button');
+        upButton.textContent = '위로';
+        upButton.classList.add('up');
+        upButton.addEventListener('click', () => {
+            movePrayer(index, 'up');
+        });
+
+        const downButton = document.createElement('button');
+        downButton.textContent = '아래로';
+        downButton.classList.add('down');
+        downButton.addEventListener('click', () => {
+            movePrayer(index, 'down');
+        });
+
         buttons.appendChild(editButton);
         buttons.appendChild(deleteButton);
         buttons.appendChild(toggleButton);
+        buttons.appendChild(upButton);
+        buttons.appendChild(downButton);
 
         div.appendChild(prayerCategory);
         div.appendChild(buttons);
@@ -151,8 +181,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const matchesCategory = categoryFilter.value === 'all' || prayer.category === categoryFilter.value;
             return matchesSearch && matchesStatus && matchesCategory;
         });
-        filteredPrayers.forEach(prayer => {
-            addPrayerToList(prayer);
+        filteredPrayers.forEach((prayer, index) => {
+            addPrayerToList(prayer, index);
         });
         prayerList.swiper.update();
     };

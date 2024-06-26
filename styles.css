@@ -263,6 +263,16 @@ form button:hover {
     color: #fff;
 }
 
+.prayer-card .buttons .up {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.prayer-card .buttons .down {
+    background-color: #6c757d;
+    color: #fff;
+}
+
 .prayer-card .buttons button:hover {
     opacity: 0.8;
 }
