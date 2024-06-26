@@ -41,7 +41,7 @@ body {
     background-color: #fff;
     display: flex;
     flex-direction: column;
-    align-items:safe;
+    align-items: safe;
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
@@ -54,26 +54,6 @@ body {
 nav {
     padding: 10px;
     background-color: #f8f9fa;
-}
-
-#view-prayers-page {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
-
-#prayer-carousel {
-    flex: 1;
-    overflow: hidden;
-}
-
-swiper-container {
-    width: 100%;
-    height: 100%;
-}
-
-nav {
     display: flex;
     justify-content: space-between;
 }
@@ -112,7 +92,7 @@ form textarea {
     border: 1px solid #ccc;
     border-radius: 4px;
     margin-bottom: 10px;
-    resize: none;;
+    resize: none;
 }
 
 form select {
@@ -167,7 +147,6 @@ form button:hover {
     align-items: center;
     flex-direction: column;
     white-space: pre-line;
-    /* 줄 바꿈을 표현하도록 */
 }
 
 .carousel-btn {
@@ -197,7 +176,6 @@ form button:hover {
 }
 
 .carousel-index span {
-    /* cursor: pointer; */
     margin: 0 5px;
 }
 
@@ -245,17 +223,16 @@ form button:hover {
 
 .prayer-card {
     min-height: 300px;
-    /* padding: 10px; */
     text-align: left;
 }
+
 .prayer-card .completed {
-    /* text-decoration: line-through; */
     color: gray;
 }
 
 .prayer-head {
-    color:cadetblue;
-    font-size:smaller;
+    color: cadetblue;
+    font-size: smaller;
 }
 
 .prayer-card .buttons {
@@ -269,7 +246,6 @@ form button:hover {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-
 }
 
 .prayer-card .buttons .edit {
@@ -289,4 +265,38 @@ form button:hover {
 
 .prayer-card .buttons button:hover {
     opacity: 0.8;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .container {
+        padding: 10px;
+        width: 100%;
+        height: auto;
+    }
+
+    nav {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    nav button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .filters {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .filters input,
+    .filters select {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .carousel {
+        height: auto;
+    }
 }
