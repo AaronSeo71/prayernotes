@@ -6,7 +6,6 @@
 
 .lines {
     background-image: repeating-linear-gradient(white 0px, white 24px, rgb(162, 187, 207) 25px);
-    height: 50vh;
 }
 
 .text {
