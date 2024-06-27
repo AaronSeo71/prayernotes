@@ -11,10 +11,20 @@
 <body>
     <div class="container">
         <nav>
-            <button id="add-prayer-btn">기도 제목 추가</button>
-            <button id="export-prayers-btn">내보내기</button>
-            <button id="import-prayers-btn">가져오기</button>
-            <button id="delete-all-btn">전체 삭제</button>
+            <div class="nav-left">
+                <button id="hamburger-menu">☰</button>
+                <div id="hamburger-submenu" class="submenu">
+                    <button id="export-prayers-btn">내보내기</button>
+                    <button id="import-prayers-btn">가져오기</button>
+                    <button id="delete-all-btn">전체 삭제</button>
+                </div>
+            </div>
+            <div class="nav-center">
+                <h1>기도 노트</h1>
+            </div>
+            <div class="nav-right">
+                <button id="add-prayer-btn">추가</button>
+            </div>
             <input type="file" id="file-input" style="display: none;">
         </nav>
         <div id="add-prayer-popup" class="popup">
@@ -36,7 +46,6 @@
             </div>
         </div>
         <div id="view-prayers-page" class="page active">
-            <h1>기도 노트</h1>
             <div class="filters">
                 <input type="text" id="search-input" placeholder="기도 검색">
                 <select id="category-filter">
@@ -51,7 +60,7 @@
                 <select id="status-filter">
                     <option value="all">모두 보기</option>
                     <option value="completed">응답</option>
-                    <option value="not-completed">미응답</option>
+                    <option selected value="not-completed">미응답</option>
                 </select>
             </div>
             <div id="prayer-buttons" class="prayer-buttons">

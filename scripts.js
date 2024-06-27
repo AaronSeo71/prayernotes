@@ -63,12 +63,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const upBtn = document.getElementById('up-btn');
     const downBtn = document.getElementById('down-btn');
 
+    const hamburgerMenu = document.getElementById('hamburger-menu');
+    const hamburgerSubmenu = document.getElementById('hamburger-submenu');
 
     let prayers = JSON.parse(localStorage.getItem('prayers')) || [];
     let currentPrayerIndex = 0;
     let movetoPrayerIndex = 0;
     let currentPrayerId = 0;
     let editingId = null;
+
+    hamburgerMenu.addEventListener('click', () => {
+        hamburgerSubmenu.style.display = hamburgerSubmenu.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // Close the submenu when clicking outside
+    document.addEventListener('click', (event) => {
+        if (!hamburgerMenu.contains(event.target) && !hamburgerSubmenu.contains(event.target)) {
+            hamburgerSubmenu.style.display = 'none';
+        }
+    });
+
+
 
     // 날짜 포맷팅 헬퍼 함수
     const formatDate = (date) => {
