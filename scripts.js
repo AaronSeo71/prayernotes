@@ -27,7 +27,7 @@ const params = {
     scrollbar: {
         draggable: true,
         dragSize: 30,
-    }
+    },
 }
 Object.assign(swiperEl, params)
 swiperEl.initialize();
@@ -54,11 +54,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalCountDisplay = document.getElementById('total-count');
     const exportPrayersBtn = document.getElementById('export-prayers-btn');
     const importPrayersBtn = document.getElementById('import-prayers-btn');
+    const deleteAllBtn = document.getElementById('delete-all-btn');
     const fileInput = document.getElementById('file-input');
+
+    const editBtn = document.getElementById('edit-btn');
+    const deleteBtn = document.getElementById('delete-btn');
+    const toggleBtn = document.getElementById('toggle-btn');
+    const upBtn = document.getElementById('up-btn');
+    const downBtn = document.getElementById('down-btn');
 
 
     let prayers = JSON.parse(localStorage.getItem('prayers')) || [];
-    let currentIndex = 0;
+    let currentPrayerIndex = 0;
+    let movetoPrayerIndex = 0;
+    let currentPrayerId = 0;
     let editingId = null;
 
     // 날짜 포맷팅 헬퍼 함수
@@ -71,12 +80,12 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('prayers', JSON.stringify(prayers));
     };
 
-    const movePrayer = (index, direction) => {
-        if (direction === 'up' && index > 0) {
-            [prayers[index], prayers[index - 1]] = [prayers[index - 1], prayers[index]];
+    const movePrayer = (fromindex, toindex, direction) => {
+        if (direction === 'up' && fromindex > 0) {
+            [prayers[fromindex], prayers[toindex]] = [prayers[toindex], prayers[fromindex]];
             prayerList.swiper.slidePrev(100);
-        } else if (direction === 'down' && index < prayers.length - 1) {
-            [prayers[index], prayers[index + 1]] = [prayers[index + 1], prayers[index]];
+        } else if (direction === 'down' && fromindex < prayers.length - 1) {
+            [prayers[fromindex], prayers[toindex]] = [prayers[toindex], prayers[fromindex]];
             prayerList.swiper.slideNext(100);
 
         }
@@ -84,8 +93,88 @@ document.addEventListener('DOMContentLoaded', () => {
         renderPrayers();
     };
 
+    const updateButtonStates = () => {
+        currentPrayerIndex = prayers.findIndex(p => p.id === currentPrayerId);
+        const prayer = prayers[currentPrayerIndex];
+        editBtn.disabled = !prayer;
+        deleteBtn.disabled = !prayer;
+        toggleBtn.disabled = !prayer;
+        upBtn.disabled = !prayer || currentPrayerIndex === 0;
+        downBtn.disabled = !prayer || currentPrayerIndex === prayers.length - 1;
+        
+        if (prayer) {
+            toggleBtn.textContent = prayer.completed ? '미응답' : '응답';
+        }
+    };
+
+    editBtn.addEventListener('click', () => {
+        const prayerIndex = prayers.findIndex(p => p.id === currentPrayerId);
+        const prayer = prayers[prayerIndex];
+        if (prayer) {
+            prayerInput.value = prayer.text;
+            categorySelect.value = prayer.category;
+            editingId = prayer.id;
+            showPopup();
+        }
+    });
+
+    deleteBtn.addEventListener('click', () => {
+        currentPrayerIndex = prayers.findIndex(p => p.id === currentPrayerId);
+        const prayer = prayers[currentPrayerIndex];
+        if (prayer) {
+            if (confirm(`정말로 다음 기도 제목을 삭제하시겠습니까?\n\n"${prayer.text.substring(0, 50)}${prayer.text.length > 50 ? '...' : ''}"\n\n이 작업은 되돌릴 수 없습니다.`)) {
+                prayers.splice(currentPrayerIndex, 1);
+                savePrayers();
+                if (currentPrayerIndex >= prayers.length) {
+                    currentPrayerIndex = Math.max(prayers.length - 1, 0);
+                }
+                renderPrayers();
+                updateButtonStates();
+                alert('기도 제목이 삭제되었습니다.');
+            }
+        }
+    });
+
+    toggleBtn.addEventListener('click', () => {
+        currentPrayerIndex = prayers.findIndex(p => p.id === currentPrayerId);
+        const prayer = prayers[currentPrayerIndex];
+        if (prayer) {
+            prayer.completed = !prayer.completed;
+            if (prayer.completed) {
+                const today = formatDate(new Date());
+                prayer.answerdate = today;
+            } else {
+                prayer.answerdate = '****.**.**';
+            }
+            savePrayers();
+            renderPrayers();
+            updateButtonStates();
+        }
+    });
+
+    upBtn.addEventListener('click', () => {
+        if (prayerList.swiper.activeIndex > 0) {
+            currentPrayerIndex = prayers.findIndex(p => p.id === currentPrayerId);
+            var movetoPrayerId = prayerList.swiper.slides[prayerList.swiper.activeIndex-1].id;
+            movetoPrayerIndex = prayers.findIndex(p => p.id === Number(movetoPrayerId));
+            movePrayer(currentPrayerIndex,movetoPrayerIndex,'up');
+            updateButtonStates();
+        }
+    });
+
+    downBtn.addEventListener('click', () => {
+        if (prayerList.swiper.activeIndex < prayerList.swiper.slides.length - 1) {
+            currentPrayerIndex = prayers.findIndex(p => p.id === currentPrayerId);
+            var movetoPrayerId = prayerList.swiper.slides[prayerList.swiper.activeIndex+1].id;
+            movetoPrayerIndex = prayers.findIndex(p => p.id === Number(movetoPrayerId));
+            movePrayer(currentPrayerIndex,movetoPrayerIndex, 'down');
+            updateButtonStates();
+        }
+    });
+
     const addPrayerToList = (prayer, index) => {
         const div = document.createElement('swiper-slide');
+        div.id = prayer.id;
         div.classList.add('prayer-card');
 
         const prayerText = document.createElement('div');
@@ -106,73 +195,33 @@ document.addEventListener('DOMContentLoaded', () => {
             prayerText.classList.add('completed');
         }
 
-        const buttons = document.createElement('div');
-        buttons.classList.add('buttons');
-
-        const editButton = document.createElement('button');
-        editButton.textContent = '편집';
-        editButton.classList.add('edit');
-        editButton.addEventListener('click', () => {
-            prayerInput.value = prayer.text;
-            categorySelect.value = prayer.category;
-            editingId = prayer.id;
-            showPopup();
-        });
-
-        const deleteButton = document.createElement('button');
-        deleteButton.textContent = '삭제';
-        deleteButton.classList.add('delete');
-        deleteButton.addEventListener('click', () => {
-            prayers = prayers.filter(p => p.id !== prayer.id);
-            savePrayers();
-            renderPrayers();
-        });
-
-        const toggleButton = document.createElement('button');
-        toggleButton.textContent = prayer.completed ? '미응답' : '응답';
-        toggleButton.classList.add('toggle');
-        toggleButton.addEventListener('click', () => {
-            prayer.completed = !prayer.completed;
-            if (prayer.completed) {
-                const today = formatDate(new Date());
-                prayer.answerdate = today;
-            }
-            else {
-                prayer.answerdate = '****.**.**';
-            }
-
-            savePrayers();
-            renderPrayers();
-        });
-
-        // New Up and Down Buttons
-        const upButton = document.createElement('button');
-        upButton.textContent = '위로';
-        upButton.classList.add('up');
-        upButton.addEventListener('click', () => {
-            movePrayer(index, 'up');
-        });
-
-        const downButton = document.createElement('button');
-        downButton.textContent = '아래로';
-        downButton.classList.add('down');
-        downButton.addEventListener('click', () => {
-            movePrayer(index, 'down');
-        });
-
-        buttons.appendChild(editButton);
-        buttons.appendChild(deleteButton);
-        buttons.appendChild(toggleButton);
-        buttons.appendChild(upButton);
-        buttons.appendChild(downButton);
-
+        
         div.appendChild(prayerCategory);
-        div.appendChild(buttons);
         div.appendChild(prayerText);
 
         prayerList.appendChild(div);
     };
 
+    prayerList.swiper.on('activeIndexChange', (event) => {
+        if (prayerList.swiper.slides.length > 0) {
+            currentPrayerId = Number(prayerList.swiper.slides[prayerList.swiper.realIndex].id);
+        }
+        updateButtonStates();
+    });
+    prayerList.swiper.on('slideChange', (event) => {
+        if (prayerList.swiper.slides.length > 0) {
+            currentPrayerId = Number(prayerList.swiper.slides[prayerList.swiper.realIndex].id);
+        }
+        updateButtonStates();
+    });
+
+    prayerList.swiper.on('update', (event) => {
+        if (prayerList.swiper.slides.length > 0) {
+            currentPrayerId = Number(prayerList.swiper.slides[prayerList.swiper.realIndex].id);
+        }
+        updateButtonStates();
+    });
+    
     const renderPrayers = () => {
         prayerList.innerHTML = '';
         const filteredPrayers = prayers.filter(prayer => {
@@ -277,5 +326,17 @@ document.addEventListener('DOMContentLoaded', () => {
             reader.readAsText(file);
         }
     });
+
+    deleteAllBtn.addEventListener('click', () => {
+        if (confirm('정말로 모든 기도 제목을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
+            prayers = [];
+            savePrayers();
+            renderPrayers();
+            updateButtonStates();
+            alert('모든 기도 제목이 삭제되었습니다.');
+        }
+    });
+    
     renderPrayers();
+    updateButtonStates();
 });

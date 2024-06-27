@@ -14,6 +14,7 @@
             <button id="add-prayer-btn">기도 제목 추가</button>
             <button id="export-prayers-btn">내보내기</button>
             <button id="import-prayers-btn">가져오기</button>
+            <button id="delete-all-btn">전체 삭제</button>
             <input type="file" id="file-input" style="display: none;">
         </nav>
         <div id="add-prayer-popup" class="popup">
@@ -52,6 +53,13 @@
                     <option value="completed">응답</option>
                     <option value="not-completed">미응답</option>
                 </select>
+            </div>
+            <div id="prayer-buttons" class="prayer-buttons">
+                <button id="edit-btn" class="edit">편집</button>
+                <button id="delete-btn" class="delete">삭제</button>
+                <button id="toggle-btn" class="toggle">응답/미응답</button>
+                <button id="up-btn" class="up">위로</button>
+                <button id="down-btn" class="down">아래로</button>
             </div>
             <div id="prayer-carousel" class="carousel paper">
                 <swiper-container id="prayer-list" class="lines" 
